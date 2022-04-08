@@ -46,8 +46,35 @@ public class DAO<T> implements CarDAO<T>{
     }
 
     @Override
-    public T update(T dto) {
-        return null;
+    public String update(Integer ID, String field, T newValue) throws SQLException {
+        Connection connection = ConnectionFactory.getConnection();
+        if (field.equalsIgnoreCase("make")) {
+            field.toLowerCase();
+        } else if (field.equalsIgnoreCase("model")) {
+            field.toLowerCase();
+        } else if (field.equalsIgnoreCase("year")) {
+            field.toLowerCase();
+        } else if (field.equalsIgnoreCase("color")) {
+            field.toLowerCase();
+        } else if (field.equalsIgnoreCase("VIN")) {
+            field.toUpperCase();
+        }
+        try {
+            PreparedStatement ps = connection.prepareStatement("UPDATE car SET " + field + "=? " +
+                    "WHERE ID=" + ID);
+            if (newValue instanceof String) {
+                ps.setString(1, (String) newValue);
+            } else if (newValue instanceof Integer) {
+                ps.setInt(1, (Integer) newValue);
+            }
+            int i = ps.executeUpdate();
+            if (i == 1) {
+                return ("UPDATE SUCCESSFUL");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "UPDATE UNSUCCESSFUL";
     }
 
     @Override
@@ -73,8 +100,18 @@ public class DAO<T> implements CarDAO<T>{
     }
 
     @Override
-    public void delete(Integer ID) {
-
+    public String delete(Integer ID) throws SQLException {
+        Connection connection = ConnectionFactory.getConnection();
+        try {
+            Statement stmt = connection.createStatement();
+            int i = stmt.executeUpdate("DELETE FROM car WHERE ID=" + ID);
+            if (i == 1) {
+                return "DELETE SUCCESSFUL";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "DELETE FROM DATABASE UNSUCCESSFUL";
     }
 
     public Car extractCarFromResultSet(ResultSet rs) throws SQLException {

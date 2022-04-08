@@ -13,17 +13,13 @@ public class App {
         dao.findByID(1);
         Car car = new Car(null, "Jeep", "Grand Cherokee", 2013, "gray",
                 "MAB100292");
-        dao.create(car);
+        dao.update(8, "mOdEl", "PopeMobile");
         dao.findAll();
+        // dao.delete(7);
         // TODO - TESTS
-
-
+        // TODO - create console/action selection
     }
 }
-
-//update()
-//create()
-//delete()
 
 
 
