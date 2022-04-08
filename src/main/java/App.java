@@ -18,6 +18,7 @@ public class App {
         // dao.delete(7);
         // TODO - TESTS
         // TODO - create console/action selection
+        // TODO - DTO???
     }
 }
 
