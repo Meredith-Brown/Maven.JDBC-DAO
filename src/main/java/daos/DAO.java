@@ -2,10 +2,7 @@ package daos;
 
 import models.Car;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +15,7 @@ public class DAO<T> implements CarDAO<T>{
             ResultSet rs = stmt.executeQuery("SELECT * FROM car WHERE ID=" + ID); // or id?
             if (rs.next()) {
                 Car car = extractCarFromResultSet(rs);
-                System.out.println(car.getMake() + " " + car.getModel());
+                System.out.println("ID " + ID + ": " + car.getMake() + " " + car.getModel());
                 return car;
             }
         } catch (SQLException e) {
@@ -39,7 +36,7 @@ public class DAO<T> implements CarDAO<T>{
                 listOfCars.add(car);
             }
             for (Car car : listOfCars) {
-                System.out.println(car.getMake() + " " + car.getModel());
+                System.out.println("ID " + car.getID() + ": " + car.getMake() + " " + car.getModel());
             }
             return listOfCars;
         } catch (SQLException e) {
@@ -54,8 +51,25 @@ public class DAO<T> implements CarDAO<T>{
     }
 
     @Override
-    public T create(T dto) {
-        return null;
+    public String create(Car car) throws SQLException {
+        Connection connection = ConnectionFactory.getConnection();
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO car VALUES (NULL, ?, ?, ?, " +
+                    "?, ?)");
+            ps.setString(1, car.getMake());
+            ps.setString(2, car.getModel());
+            ps.setInt(3, car.getYear());
+            ps.setString(4, car.getColor());
+            ps.setString(5, car.getVIN());
+            int i = ps.executeUpdate();
+            if (i == 1) {
+                return ("ID " + car.getID() + ": " + car.getMake() + " " + car.getModel() + " successfully " +
+                        "added to database.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "ADD CAR TO DATABASE UNSUCCESSFUL";
     }
 
     @Override
