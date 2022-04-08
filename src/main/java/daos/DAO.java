@@ -15,7 +15,6 @@ public class DAO<T> implements CarDAO<T>{
             ResultSet rs = stmt.executeQuery("SELECT * FROM car WHERE ID=" + ID); // or id?
             if (rs.next()) {
                 Car car = extractCarFromResultSet(rs);
-                System.out.println("ID " + ID + ": " + car.getMake() + " " + car.getModel());
                 return car;
             }
         } catch (SQLException e) {
@@ -34,9 +33,6 @@ public class DAO<T> implements CarDAO<T>{
             while (rs.next()) {
                 Car car = extractCarFromResultSet(rs);
                 listOfCars.add(car);
-            }
-            for (Car car : listOfCars) {
-                System.out.println("ID " + car.getID() + ": " + car.getMake() + " " + car.getModel());
             }
             return listOfCars;
         } catch (SQLException e) {
@@ -90,8 +86,7 @@ public class DAO<T> implements CarDAO<T>{
             ps.setString(5, car.getVIN());
             int i = ps.executeUpdate();
             if (i == 1) {
-                return ("ID " + car.getID() + ": " + car.getMake() + " " + car.getModel() + " successfully " +
-                        "added to database.");
+                return (car.getMake() + " " + car.getModel() + " successfully added to database.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
